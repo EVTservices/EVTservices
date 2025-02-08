@@ -1,0 +1,129 @@
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap");
+
+body {
+  font-family: "Kanit", sans-serif;
+}
+
+/* === General Page Layout === */
+.seatbooking-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+  background-color: white;
+}
+
+/* === Header Section === */
+.seatbooking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 15px 40px;
+  background-color: #f5f5f5;
+}
+
+.seatbooking-logo {
+  width: 120px;
+  margin-left: 20px;
+}
+
+.history-button {
+  width: 200px;
+  height: 35px;
+  padding: 0;
+  margin-right: 20px;
+  background: #007642;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: "Kanit", sans-serif !important;
+  align-items: center;
+  text-align: center;
+  box-shadow: inset 5px 3px 10px rgba(0, 0, 0, 0.2),
+    0px 3px 5px rgba(0, 0, 0, 0.15);
+}
+
+.history-button:hover {
+  background: #144d00;
+}
+
+/* === Form Section === */
+.seatbooking-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 70px;
+  gap: 20px; /* Adjust spacing between fields */
+  width: 100%;
+  max-width: 500px;
+}
+
+/* === Input Fields === */
+.seatbooking-input-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.seatbooking-label {
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.seatbooking-input {
+  width: 100%; /* Adjust width as needed */
+  max-width: 460px;
+  height: 20px;
+  padding: 10px 20px;
+  border: 2px solid #007642;
+  border-radius: 25px;
+  background-color: #eaeae8;
+  outline: none;
+  font-family: "Kanit", sans-serif;
+  font-size: 16px;
+}
+
+/* Focus Effect */
+.seatbooking-input:focus {
+  border: 2px solid #144d00;
+}
+
+/* === Booking Button === */
+.seatbooking-button-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.seatbooking-button {
+  width: 100%;
+  max-width: 350px;
+  height: 60px;
+  padding: 15px;
+  background: #007642;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: "Kanit", sans-serif;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 5px 3px 12px rgba(0, 0, 0, 0.3),
+    0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.seatbooking-button:hover {
+  background: #144d00;
+}

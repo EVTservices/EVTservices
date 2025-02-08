@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap");
+
+body {
+  font-family: "Kanit", sans-serif;
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: white;
+  font-family: "Kanit", sans-serif;
+}
+
+.menu-logo {
+  width: 200px;
+  margin-bottom: 30px;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px; /* Adjusts spacing between buttons */
+  width: 100%;
+}
+
+.menu-button {
+  width: 100%;
+  max-width: 400px;
+  height: 60px;
+  padding: 15px;
+  background: #007642;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 30px; /* Rounded corners */
+  cursor: pointer;
+  font-family: "Kanit", sans-serif !important;
+  text-align: center;
+  display: flex;
+  align-items: center; /* Vertically center text */
+  justify-content: center; /* Horizontally center text */
+
+  /* Inner Shadow Effect */
+  box-shadow: 
+    inset 8px 5px 14.9px rgba(0, 0, 0, 0.23), /* Inner shadow */
+    0px 4px 6px rgba(0, 0, 0, 0.2); /* Outer shadow */
+}
+
+.menu-button:hover {
+  background: #004d00;
+}
