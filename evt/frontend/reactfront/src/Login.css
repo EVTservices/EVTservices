@@ -85,6 +85,25 @@ input {
     box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.23)
 }
 
+.login-button-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
 .login-button:hover {
   background-color: #004d00;
 }
+
+.login-error {
+    color: red; /* 🔴 Make text red */
+    font-size: 14px; /* Adjust text size */
+    font-weight: 600; /* Make it bold */
+    font-family: "Kanit", sans-serif !important;
+    text-align: center; /* Center align text */
+    justify-content: center;
+    margin-top: 10px; /* Add spacing from input */
+    width: 100%; /* Make it full-width */
+    max-width: 500px; /* Limit max width */
+  }
+  
