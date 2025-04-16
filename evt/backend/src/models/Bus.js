@@ -3,11 +3,26 @@ const sequelize = require("../config/database");
 const Route = require("./Route");
 
 const Bus = sequelize.define("Bus", {
-    id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
+    bus_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     bus_number: { type: DataTypes.STRING, allowNull: false, unique: true },
     capacity: { type: DataTypes.INTEGER, allowNull: false },
-    route_id: { type: DataTypes.UUID, references: { model: Route, key: "id" } },
-    status: { type: DataTypes.STRING, allowNull: false }
-}, { timestamps: false });
+    route_id: { 
+        type: DataTypes.INTEGER, 
+        allowNull: false,
+        references: { model: Route, key: "route_id" }, // Fix reference
+        onDelete: "CASCADE"
+    },
+    status: { type: DataTypes.STRING, allowNull: false },
+
+    device_id: { type: DataTypes.STRING, allowNull: true }, // Link to GPS device
+    current_latitude: { type: DataTypes.FLOAT, allowNull: true },
+    current_longitude: { type: DataTypes.FLOAT, allowNull: true },
+    last_updated: { type: DataTypes.DATE, allowNull: true },
+
+}, { timestamps: false, freezeTableName: true });
+
+// Define association
+Route.hasMany(Bus, { foreignKey: "route_id", as: "buses" });
+Bus.belongsTo(Route, { foreignKey: "route_id", as: "route" });
 
 module.exports = Bus;

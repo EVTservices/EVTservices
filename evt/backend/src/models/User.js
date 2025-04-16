@@ -18,14 +18,14 @@ const sequelize = require("../config/database");
 const bcrypt = require("bcryptjs");
 
 const User = sequelize.define("User", {
-    id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
+    user_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     phone_number: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: { type: DataTypes.STRING, allowNull: false }, // Hashed Password
     name: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
-    line_id: { type: DataTypes.STRING },
+    line_user_id: { type: DataTypes.STRING, allowNull: true, unique: true }, // Must be unique for each user
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-}, { timestamps: false });
+}, { timestamps: false, freezeTableName: true });
 
 // Hash password before saving user
 User.beforeCreate(async (user) => {
@@ -33,3 +33,5 @@ User.beforeCreate(async (user) => {
 });
 
 module.exports = User;
+
+
