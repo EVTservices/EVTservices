@@ -1,0 +1,93 @@
+.booking-success-container {
+    font-family: "Kanit", sans-serif;
+    background: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .booking-success-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #EAEAE8;
+    padding: 10px 20px;
+  }
+  
+  .booking-logo {
+    width: 120px;
+  }
+  
+  .booking-nav-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .booking-nav-buttons button {
+    background: #007642;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: "Kanit", sans-serif;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .booking-nav-buttons button:hover {
+    background: #144d00;
+  }
+  
+  .booking-success-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .success-icon {
+    font-size: 70px;
+    color: #007642;
+    margin-bottom: 20px;
+  }
+  
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  h2 span {
+    display: block;
+    font-size: 20px;
+  }
+  
+  p {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  @media (max-width: 480px) {
+    .success-icon {
+      font-size: 50px;
+    }
+  
+    h2 {
+      font-size: 20px;
+    }
+  
+    h2 span {
+      font-size: 18px;
+    }
+  
+    .booking-nav-buttons button {
+      font-size: 14px;
+      padding: 6px 14px;
+    }
+  }
+  
