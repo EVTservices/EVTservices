@@ -13,7 +13,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
 const Factory = sequelize.define("Factory", {
-  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  factory_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   name: { type: DataTypes.STRING, allowNull: false },
   address: { type: DataTypes.STRING },
 }, { timestamps: false, freezeTableName: true });

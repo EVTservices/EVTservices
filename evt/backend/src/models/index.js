@@ -7,6 +7,7 @@ const Bus = require("./Bus");
 const Reservation = require("./Reservation");
 const CheckIn = require("./CheckIn");
 const Notification = require("./Notification");
+const BusSchedule = require("./BusSchedule");
 
 // ✅ Define associations here
 Factory.hasMany(Route, { foreignKey: "factory_id" });
@@ -26,5 +27,6 @@ module.exports = {
   Bus,
   Reservation,
   CheckIn,
-  Notification
+  Notification,
+  BusSchedule
 };

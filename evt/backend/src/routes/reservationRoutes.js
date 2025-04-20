@@ -3,15 +3,16 @@ const router = express.Router();
 const reservationController = require("../controllers/reservationController");
 const { verifyToken } = require("../authentication/auth");
 
-// Factory → Routes → Stops
-router.get("/factories", reservationController.getAllFactories);
-router.get("/factories/:factoryId/routes", reservationController.getRoutesByFactory);
-router.get("/routes/:routeId/stops", reservationController.getStopsByRoute);
+// NEW: Get routes based on user's factory and optional shift (no more factory selection)
+router.get("/routes/my", verifyToken, reservationController.getMyRoutesByShift);
 
-// Reservation
+// Stops for a given route
+router.get("/routes/:routeId/stops", verifyToken, reservationController.getStopsByRoute);
+
+// Reservations
+router.post("/", verifyToken, reservationController.createReservation);
 router.get("/user/:userId", verifyToken, reservationController.getUserReservations);
 router.delete("/:reservationId", verifyToken, reservationController.cancelReservation);
-router.post("/", verifyToken, reservationController.createReservation);
+
 
 module.exports = router;
-

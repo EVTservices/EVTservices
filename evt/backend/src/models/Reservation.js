@@ -45,6 +45,7 @@ const User = require("./User");
 const Bus = require("./Bus");
 const Route = require("./Route");
 const Stop = require("./Stop");
+const Factory = require("./Factory");
 
 const Reservation = sequelize.define("Reservation", {
   reservation_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
@@ -72,6 +73,13 @@ const Reservation = sequelize.define("Reservation", {
     references: { model: Stop, key: "stop_id" },
     onDelete: "CASCADE"
   },
+  factory_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: { model: Factory, key: "factory_id" },
+    onDelete: "CASCADE"
+  },
+
   seat_number: { type: DataTypes.INTEGER, allowNull: true },
   status: { type: DataTypes.STRING, defaultValue: "Confirmed" },
   booking_time: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
@@ -86,11 +94,13 @@ Reservation.belongsTo(User, { foreignKey: "user_id" });
 Reservation.belongsTo(Bus, { foreignKey: "bus_id" });
 Reservation.belongsTo(Route, { foreignKey: "route_id" });
 Reservation.belongsTo(Stop, { foreignKey: "stop_id" });
+Reservation.belongsTo(Factory, { foreignKey: "factory_id"});
 
 User.hasMany(Reservation, { foreignKey: "user_id" });
 Bus.hasMany(Reservation, { foreignKey: "bus_id" });
 Route.hasMany(Reservation, { foreignKey: "route_id" });
 Stop.hasMany(Reservation, { foreignKey: "stop_id" });
+Factory.hasMany(Reservation, { foreignKey: "factory_id"});
 
 module.exports = Reservation;
 

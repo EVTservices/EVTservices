@@ -4,6 +4,11 @@ const pool = require("./config/database");
 
 const app = express();
 
+require("dotenv").config();
+
+const pollBusLocations = require("./polling/pollingBusLocation");
+const cron = require("node-cron");
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -33,5 +38,11 @@ app.get("/api/test-db", async (req, res) => {
     res.status(500).json({ error: "Database connection failed" });
   }
 });
+
+// Start polling every minute
+cron.schedule("* * * * *", () => {
+    console.log("⏱️ Running GPS polling...");
+    pollBusLocations();
+  });
 
 module.exports = app;

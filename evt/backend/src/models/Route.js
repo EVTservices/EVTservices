@@ -28,7 +28,8 @@ const Route = sequelize.define("Route", {
   factory_id: {
     type: DataTypes.INTEGER,
     allowNull: false
-  }
+  },
+  shift_name: { type: DataTypes.STRING, allowNull: false }
 }, { timestamps: false, freezeTableName: true });
 
 module.exports = Route;

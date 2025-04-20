@@ -22,7 +22,8 @@ const User = sequelize.define("User", {
     phone_number: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: { type: DataTypes.STRING, allowNull: false }, // Hashed Password
     name: { type: DataTypes.STRING, allowNull: false },
-    email: { type: DataTypes.STRING, allowNull: false, unique: true },
+    email: { type: DataTypes.STRING, allowNull: true, unique: true },
+    factory_name: {type: DataTypes.STRING, allowNull: false},
     line_user_id: { type: DataTypes.STRING, allowNull: true, unique: true }, // Must be unique for each user
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
 }, { timestamps: false, freezeTableName: true });
