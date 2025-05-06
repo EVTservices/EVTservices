@@ -4,6 +4,7 @@ const axios = require("axios");
 
 console.log("🔑 GOOGLE_API_KEY =", process.env.GOOGLE_API_KEY);
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const GPS_API_URL = process.env.GPS_API_URL;
 const GPS_API_TOKEN = process.env.GPS_API_TOKEN;
 
 const Bus = require("../models/Bus");
