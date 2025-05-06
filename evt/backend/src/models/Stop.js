@@ -26,6 +26,8 @@ const sequelize = require("../config/database");
 const Stop = sequelize.define("Stop", {
   stop_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   name: { type: DataTypes.STRING, allowNull: false },
+  latitude: { type: DataTypes.FLOAT, allowNull: true },
+  longitude: { type: DataTypes.FLOAT, allowNull: true },
   route_id: {
     type: DataTypes.INTEGER,
     allowNull: false

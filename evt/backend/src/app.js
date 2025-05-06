@@ -15,13 +15,16 @@ app.use(express.json());
 
 // Routes
 const authRoutes = require("./routes/authRoutes");
-const reservationRoutes = require("./routes/reservationRoutes"); // ✅ Add this line
+const reservationRoutes = require("./routes/reservationRoutes");
 const busTrackingRoutes = require("./routes/trackingRoutes");
+const checkInRoutes = require("./routes/checkRoutes");
 
 // Use routes
 app.use("/api/auth", authRoutes);
-app.use("/api/reservations", reservationRoutes); // ✅ Register the reservation APIs
+app.use("/api/reservations", reservationRoutes);
 app.use("/api/buses", busTrackingRoutes);
+app.use("/api/checkin", checkInRoutes);  // Endpoint: /api/checkin/scan
+app.use("/api/checkout", checkInRoutes);
 
 // Root route
 app.get("/", (req, res) => {
