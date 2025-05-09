@@ -6,13 +6,35 @@ const Route = require("./Route");
 const Stop = require("./Stop");
 
 const CheckIn = sequelize.define("CheckIn", {
-    id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
-    user_id: { type: DataTypes.UUID, references: { model: User, key: "id" } },
-    bus_id: { type: DataTypes.UUID, references: { model: Bus, key: "id" } },
-    route_id: { type: DataTypes.UUID, references: { model: Route, key: "id" } },
-    stop_id: { type: DataTypes.UUID, references: { model: Stop, key: "id" } },
+    checkIn_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+    user_id: { 
+        type: DataTypes.INTEGER, 
+        allowNull: false,
+        references: { model: User, key: "user_id" }, // Fix reference
+        onDelete: "CASCADE"
+    },
+    bus_id: { 
+        type: DataTypes.INTEGER, 
+        allowNull: false,
+        references: { model: Bus, key: "bus_id" }, // Fix reference
+        onDelete: "CASCADE"
+    },
+    route_id: { 
+        type: DataTypes.INTEGER, 
+        allowNull: false,
+        references: { model: Route, key: "route_id" }, // Fix reference
+        onDelete: "CASCADE"
+    },
+    stop_id: { 
+        type: DataTypes.INTEGER, 
+        allowNull: false,
+        references: { model: Stop, key: "stop_id" }, // Fix reference
+        onDelete: "CASCADE"
+    },
     qr_code_scanned: { type: DataTypes.BOOLEAN, defaultValue: false },
-    check_in_time: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
-}, { timestamps: false });
+    check_in_time: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    check_out_time: { type: DataTypes.DATE, allowNull: true },
+
+}, { timestamps: false, freezeTableName: true });
 
 module.exports = CheckIn;

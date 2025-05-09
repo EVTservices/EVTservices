@@ -1,20 +1,106 @@
+// const { DataTypes } = require("sequelize");
+// const sequelize = require("../config/database");
+// const User = require("./User");
+// const Bus = require("./Bus");
+// const Route = require("./Route");
+// const Stop = require("./Stop");
+
+// const Reservation = sequelize.define("Reservation", {
+//     reservation_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+//     user_id: { 
+//         type: DataTypes.INTEGER, 
+//         allowNull: false,
+//         references: { model: User, key: "user_id" }, 
+//         onDelete: "CASCADE"
+//     },
+//     bus_id: { 
+//         type: DataTypes.INTEGER, 
+//         allowNull: false,
+//         references: { model: Bus, key: "bus_id" }, 
+//         onDelete: "CASCADE"
+//     },
+//     route_id: { 
+//         type: DataTypes.INTEGER, 
+//         allowNull: false,
+//         references: { model: Route, key: "route_id" }, 
+//         onDelete: "CASCADE"
+//     },
+//     stop_id: { 
+//         type: DataTypes.INTEGER, 
+//         allowNull: false,
+//         references: { model: Stop, key: "stop_id" }, 
+//         onDelete: "CASCADE"
+//     },
+//     seat_number: { type: DataTypes.INTEGER, allowNull: true },
+//     status: { type: DataTypes.STRING, defaultValue: "Confirmed" },
+//     booking_time: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+//     check_in_status: { type: DataTypes.BOOLEAN, defaultValue: false }
+// }, { timestamps: false, freezeTableName: true });
+
+// module.exports = Reservation;
+
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 const User = require("./User");
 const Bus = require("./Bus");
 const Route = require("./Route");
 const Stop = require("./Stop");
+const Factory = require("./Factory");
 
 const Reservation = sequelize.define("Reservation", {
-    id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
-    user_id: { type: DataTypes.UUID, references: { model: User, key: "id" } },
-    bus_id: { type: DataTypes.UUID, references: { model: Bus, key: "id" } },
-    route_id: { type: DataTypes.UUID, references: { model: Route, key: "id" } },
-    stop_id: { type: DataTypes.UUID, references: { model: Stop, key: "id" } },
-    seat_number: { type: DataTypes.INTEGER, allowNull: false },
-    status: { type: DataTypes.STRING, defaultValue: "Confirmed" },
-    booking_time: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-    check_in_status: { type: DataTypes.BOOLEAN, defaultValue: false }
-}, { timestamps: false });
+  reservation_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  user_id: { 
+    type: DataTypes.INTEGER, 
+    allowNull: false,
+    references: { model: User, key: "user_id" },
+    onDelete: "CASCADE"
+  },
+  bus_id: { 
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: { model: Bus, key: "bus_id" },
+    onDelete: "CASCADE"
+  },
+  route_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: { model: Route, key: "route_id" },
+    onDelete: "CASCADE"
+  },
+  stop_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: { model: Stop, key: "stop_id" },
+    onDelete: "CASCADE"
+  },
+  factory_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: { model: Factory, key: "factory_id" },
+    onDelete: "CASCADE"
+  },
+
+  seat_number: { type: DataTypes.INTEGER, allowNull: true },
+  status: { type: DataTypes.STRING, defaultValue: "Confirmed" },
+  booking_time: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  check_in_status: { type: DataTypes.BOOLEAN, defaultValue: false }
+}, {
+  timestamps: false,
+  freezeTableName: true
+});
+
+// Set up associations
+Reservation.belongsTo(User, { foreignKey: "user_id" });
+Reservation.belongsTo(Bus, { foreignKey: "bus_id" });
+Reservation.belongsTo(Route, { foreignKey: "route_id" });
+Reservation.belongsTo(Stop, { foreignKey: "stop_id" });
+Reservation.belongsTo(Factory, { foreignKey: "factory_id"});
+
+User.hasMany(Reservation, { foreignKey: "user_id" });
+Bus.hasMany(Reservation, { foreignKey: "bus_id" });
+Route.hasMany(Reservation, { foreignKey: "route_id" });
+Stop.hasMany(Reservation, { foreignKey: "stop_id" });
+Factory.hasMany(Reservation, { foreignKey: "factory_id"});
 
 module.exports = Reservation;
+
