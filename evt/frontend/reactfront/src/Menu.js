@@ -13,7 +13,7 @@ const Menu = () => {
 
       <div className="menu-buttons">
         <button className="menu-button" onClick={() => navigate("/seatbooking")}>จองที่นั่ง</button>
-        <button className="menu-button">ประวัติการจอง</button>
+        <button className="menu-button" onClick={() => navigate("/bookinghistory")}>ประวัติการจอง</button>
       </div>
     </div>
   );

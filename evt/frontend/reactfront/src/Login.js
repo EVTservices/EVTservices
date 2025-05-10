@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Login.css";
 import logo from "./logo.svg"; // Replace with your actual EVT logo path
+import { useCookies } from 'react-cookie'
 
 const Login = () => {
   const navigate = useNavigate();
@@ -11,13 +12,14 @@ const Login = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [cookies, setCookie] = useCookies(['token','user_id'])
 
   // Function to handle login API call
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent page refresh
 
     try {
-      const response = await axios.post("https://your-backend-api.com/login", {
+      const response = await axios.post("http://localhost:5001/api/auth/login", {
         phone_number: phoneNumber,
         password: password,
       });
@@ -25,7 +27,11 @@ const Login = () => {
       const token = response.data.token; // Get JWT token from response
 
       // Store token in localStorage
-      localStorage.setItem("token", token);
+      //localStorage.setItem("token", token);
+  
+      
+      setCookie('token', token);     
+      console.log(response.data);
 
       // Redirect to Menu page
       navigate("/menu");

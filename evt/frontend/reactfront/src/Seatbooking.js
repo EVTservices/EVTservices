@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Seatbooking.css";
 import logo from "./logo.svg"; // Replace with actual logo path
 
@@ -10,12 +11,52 @@ const Seatbooking = () => {
   const [route, setRoute] = useState("");
   const [station, setStation] = useState("");
 
+  const [routes, setRoutes] = useState([]);
+  const [stops, setStops] = useState([]);
+
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (step === 2 && shift) {
+      axios
+        .get(`http://localhost:5001/api/reservations/routes/my?shift=${shift}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => setRoutes(res.data))
+        .catch((err) => console.error("Error fetching routes:", err));
+    }
+  }, [step, shift]);
+
+  useEffect(() => {
+    if (step === 3 && route) {
+      axios
+        .get(`http://localhost:5001/api/reservations/routes/${route}/stops`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => setStops(res.data))
+        .catch((err) => console.error("Error fetching stops:", err));
+    }
+  }, [step, route]);
+
   const handleNext = () => {
     if (step === 1 && shift) setStep(2);
     else if (step === 2 && route) setStep(3);
     else if (step === 3 && station) {
-      // Here’s the redirect to success page
-      navigate("/success");
+      // Final reservation
+      axios
+        .post(
+          "http://localhost:5001/api/reservations",
+          {
+            bus_id: 1, // Replace with actual logic if bus selection is needed
+            route_id: route,
+            stop_id: station,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        .then(() => navigate("/success"))
+        .catch((err) => console.error("Reservation error:", err));
     }
   };
 
@@ -49,9 +90,9 @@ const Seatbooking = () => {
               onChange={(e) => setShift(e.target.value)}
             >
               <option value="">โปรดเลือกเวลากะการทำงาน</option>
-              <option value="morning">เช้า</option>
-              <option value="afternoon">บ่าย</option>
-              <option value="night">กลางคืน</option>
+              <option value="Morning">เช้า</option>
+              <option value="Afternoon">บ่าย</option>
+              <option value="Night">กลางคืน</option>
             </select>
           </div>
         )}
@@ -67,9 +108,11 @@ const Seatbooking = () => {
                 onChange={(e) => setRoute(e.target.value)}
               >
                 <option value="">โปรดเลือกสายรถ</option>
-                <option value="1">สาย 1</option>
-                <option value="2">สาย 2</option>
-                <option value="3">สาย 3</option>
+                {routes.map((r) => (
+                  <option key={r.route_id} value={r.route_id}>
+                    {r.route_name}
+                  </option>
+                ))}
               </select>
             </div>
           </>
@@ -86,9 +129,11 @@ const Seatbooking = () => {
                 onChange={(e) => setStation(e.target.value)}
               >
                 <option value="">โปรดเลือกป้ายรถ</option>
-                <option value="a">ป้าย A</option>
-                <option value="b">ป้าย B</option>
-                <option value="c">ป้าย C</option>
+                {stops.map((s) => (
+                  <option key={s.stop_id} value={s.stop_id}>
+                    {s.name}
+                  </option>
+                ))}
               </select>
             </div>
           </>
@@ -109,3 +154,4 @@ const Seatbooking = () => {
 };
 
 export default Seatbooking;
+
