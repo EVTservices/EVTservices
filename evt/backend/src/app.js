@@ -18,6 +18,12 @@ const authRoutes = require("./routes/authRoutes");
 const reservationRoutes = require("./routes/reservationRoutes");
 const busTrackingRoutes = require("./routes/trackingRoutes");
 const checkInRoutes = require("./routes/checkRoutes");
+const lineRoutes = require("./routes/lineRoutes");
+const userRoutes = require("./routes/userRoutes");
+
+// For getting line id
+app.use("/api/line", lineRoutes);
+
 
 // Use routes
 app.use("/api/auth", authRoutes);
@@ -26,7 +32,8 @@ app.use("/api/buses", busTrackingRoutes);
 app.use("/api/checkin", checkInRoutes);  // Endpoint: /api/checkin/scan
 app.use("/api/checkout", checkInRoutes);
 
-// Root route
+app.use("/api/user", userRoutes); 
+
 app.get("/", (req, res) => {
   res.send("Hello from Express!");
 });
