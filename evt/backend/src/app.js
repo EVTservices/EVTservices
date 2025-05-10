@@ -5,6 +5,8 @@ const pool = require("./config/database");
 const app = express();
 
 require("dotenv").config();
+require('./models/associations');
+
 
 const pollBusLocations = require("./polling/pollingBusLocation");
 const cron = require("node-cron");
@@ -18,11 +20,11 @@ const authRoutes = require("./routes/authRoutes");
 const reservationRoutes = require("./routes/reservationRoutes");
 const busTrackingRoutes = require("./routes/trackingRoutes");
 const checkInRoutes = require("./routes/checkRoutes");
-const lineRoutes = require("./routes/lineRoutes");
+//const lineRoutes = require("./routes/lineRoutes");
 const userRoutes = require("./routes/userRoutes");
 
 // For getting line id
-app.use("/api/line", lineRoutes);
+//app.use("/api/line", lineRoutes);
 
 
 // Use routes

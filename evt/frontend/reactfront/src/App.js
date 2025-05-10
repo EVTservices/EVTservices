@@ -6,7 +6,6 @@ import Seatbooking from "./Seatbooking";
 import BookingSuccess from "./BookingSuccess";
 import BookingHistory from "./BookingHistory";
 
-
 function App() {
   return (
     <Router>

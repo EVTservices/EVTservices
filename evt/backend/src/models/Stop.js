@@ -22,6 +22,7 @@
 // module.exports = Stop;
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
+const Reservation = require("./Reservation");
 
 const Stop = sequelize.define("Stop", {
   stop_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
@@ -33,6 +34,8 @@ const Stop = sequelize.define("Stop", {
     allowNull: false
   }
 }, { timestamps: false, freezeTableName: true });
+
+Stop.hasMany(Reservation, { foreignKey: "stop_id" });
 
 module.exports = Stop;
 

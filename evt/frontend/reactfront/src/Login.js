@@ -5,6 +5,7 @@ import "./Login.css";
 import logo from "./logo.svg"; // Replace with your actual EVT logo path
 import { useCookies } from 'react-cookie'
 
+
 const Login = () => {
   const navigate = useNavigate();
 
@@ -36,6 +37,19 @@ const Login = () => {
       // Redirect to Menu page
       navigate("/menu");
     } catch (err) {
+      setError("เบอร์โทรศัพท์หรือรหัสผ่านผิดพลาด กรุณากรอกข้อมูลอีกครั้ง");
+      console.error("Login failed:", err);
+    }
+
+    try {
+      const response = await axios.get("http://localhost:5001/api/user/profile", {
+        headers: { Authorization: `Bearer ${cookies.token}` },
+      });
+      setCookie('user_id', response.data.user_id)
+      setCookie("name", response.data.user.name);
+      setCookie("factory_name", response.data.user.factory_name);
+
+    }catch(err) {
       setError("เบอร์โทรศัพท์หรือรหัสผ่านผิดพลาด กรุณากรอกข้อมูลอีกครั้ง");
       console.error("Login failed:", err);
     }

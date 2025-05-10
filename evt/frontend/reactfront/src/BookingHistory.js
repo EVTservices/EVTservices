@@ -2,79 +2,73 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./BookingHistory.css";
-import logo from "./logo.svg"; // Use your actual logo path
+import logo from "./logo.svg";
 import absentIcon from "./absent.svg";
 import onbusIcon from "./onbus.svg";
-import { useCookies } from 'react-cookie'
+import { useCookies } from 'react-cookie';
 
 const BookingHistory = () => {
   const [reservations, setReservations] = useState([]);
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies(['token']);
+  const [cookies] = useCookies(['token', 'user_id']);
   const token = cookies.token;
 
-
   useEffect(() => {
-    const userId = localStorage.getItem("user_id"); // You must save this after login
+    const userId = cookies.user_id;
     if (!userId || !token) return;
 
-    axios
-      .get(`http://localhost:5001/api/reservations/user/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setReservations(res.data.reservations || []);
-      })
-      .catch((err) => {
-        console.error("Error fetching booking history:", err);
-      });
+    axios.get(`http://localhost:5001/api/reservations/user/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((res) => {
+      setReservations(res.data.reservations || []);
+    })
+    .catch((err) => {
+      console.error("Error fetching booking history:", err);
+    });
   }, [token]);
 
-  const getStatusIcon = (status) => {
-    return status === "Confirmed" ? onbusIcon : absentIcon;
-  };
-
-  const getStatusColor = (status) => {
-    return status === "Confirmed" ? "green" : "red";
-  };
+  const getStatusIcon = (status) => status === "Confirmed" ? onbusIcon : absentIcon;
+  const getStatusColor = (status) => status === "Confirmed" ? "green" : "red";
+  const getStatusText = (status) => status === "Confirmed" ? "ขึ้นรถ" : "ขาด";
 
   return (
     <div className="history-container">
       <header className="history-header">
         <img src={logo} alt="EVT Logo" className="history-logo" />
-        <button className="book-button" onClick={() => navigate("/seatbooking")}>
-          จองที่นั่ง
-        </button>
+        <button className="book-button" onClick={() => navigate("/seatbooking")}>จองที่นั่ง</button>
       </header>
 
       <div className="history-title">ประวัติการจอง (Booking History)</div>
 
       <div className="booking-list">
         {reservations.length === 0 ? (
-          <p style={{ padding: "0 20px", color: "#888" }}>ยังไม่มีการจอง</p>
+          <p className="no-booking">ยังไม่มีการจอง</p>
         ) : (
           reservations.map((r) => (
             <div className="booking-card" key={r.reservation_id}>
-              <div className="booking-info">
-                <div>สาย: {r.Route?.route_name || "-"}</div>
-                <div>ป้าย: {r.Stop?.stop_name || "-"}</div>
-                <div>รถ: {r.Bus?.bus_number || "-"}</div>
+              <div className="left-info">
+                <div className="booking-date">
+                  {new Date(r.booking_time).toLocaleDateString("th-TH", {
+                    day: "2-digit", month: "2-digit", year: "numeric"
+                  })}
+                </div>
+                <div className="booking-detail">
+                  <div>ปลายทาง: {r.Factory?.name || "-"}</div>
+                  <div>สาย: {r.Route?.route_name || "-"}</div>
+                  <div>ป้ายขึ้น: {r.Stop?.name || "-"}</div>
+                </div>
               </div>
-              <div className="booking-status">
-                <img
-                  src={getStatusIcon(r.status)}
-                  alt={r.status}
-                  className="status-icon-img"
-                />
-                <span className={`status-text ${getStatusColor(r.status)}`}>
-                  {r.status}
-                </span>
-              </div>
-              <div className="booking-date">
-                {new Date(r.booking_time).toLocaleString("th-TH", {
-                  dateStyle: "short",
-                  timeStyle: "short",
-                })}
+
+              <div className="right-status">
+                {r.status === "Cancelled" ? (
+                  <button className="cancelled-button">ยกเลิกการจอง</button>
+                ) : (
+                  <>
+                    <img src={getStatusIcon(r.status)} alt={r.status} className="status-icon-img" />
+                    <span className={`status-text ${getStatusColor(r.status)}`}>{getStatusText(r.status)}</span>
+                  </>
+                )}
               </div>
             </div>
           ))
@@ -85,5 +79,7 @@ const BookingHistory = () => {
 };
 
 export default BookingHistory;
+
+
 
 

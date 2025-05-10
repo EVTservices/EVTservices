@@ -17,7 +17,29 @@ body {
 
 .menu-logo {
   width: 200px;
+  margin-bottom: 20px;
+}
+
+.menu-greeting {
+  text-align: center;
   margin-bottom: 30px;
+  line-height: 1.4;
+}
+
+.menu-greeting .welcome {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.menu-greeting .username {
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.menu-greeting .factory {
+  font-size: 14px;
+  color: #333;
 }
 
 .menu-buttons {
@@ -26,7 +48,7 @@ body {
   align-items: center;
   gap: 20px;
   width: 100%;
-  max-width: 360px; /* 🔧 Set a max width for the button area */
+  max-width: 360px;
 }
 
 .menu-button {
@@ -54,7 +76,6 @@ body {
   background: #004d00;
 }
 
-/* 📱 Responsive for mobile */
 @media (max-width: 480px) {
   .menu-logo {
     width: 120px;
@@ -68,9 +89,8 @@ body {
   }
 
   .menu-buttons {
-    max-width: 100%; /* Let it stretch on smaller screens */
+    max-width: 100%;
   }
 }
-
 
 

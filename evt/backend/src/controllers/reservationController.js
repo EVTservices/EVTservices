@@ -105,7 +105,12 @@ exports.getUserReservations = async (req, res) => {
 
     const reservations = await Reservation.findAll({
       where: { user_id: userId },
-      include: [Bus, Route, Stop],
+      include: [
+        { model: Bus, as: "Bus" },
+        { model: Route, as: "Route" },
+        { model: Stop, as: "Stop" },
+        { model: Factory, as: "Factory" }
+      ],
     });
 
     res.json({ reservations });

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Seatbooking.css";
 import logo from "./logo.svg"; // Replace with actual logo path
+import { useCookies } from 'react-cookie'
 
 const Seatbooking = () => {
   const navigate = useNavigate();
@@ -14,7 +15,8 @@ const Seatbooking = () => {
   const [routes, setRoutes] = useState([]);
   const [stops, setStops] = useState([]);
 
-  const token = localStorage.getItem("token");
+  const [cookies, setCookie] = useCookies(['token','user_id'])
+  const token = cookies.token;
 
   useEffect(() => {
     if (step === 2 && shift) {
