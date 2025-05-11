@@ -1,90 +1,113 @@
 @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap");
 
+/* Global font styling */
 body {
   font-family: "Kanit", sans-serif;
 }
 
+/* Login Page Container: center content, with padding for side spacing */
 .login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
   height: 100vh;
+  padding: 0 20px;
+  box-sizing: border-box;
   background-color: white;
-  font-family: "Kanit", sans-serif;
 }
 
+/* Logo styling */
 .logo {
   width: 200px;
   margin-bottom: 20px;
 }
 
-.form {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Aligns inputs and labels to the left */
-    gap: 10px;
-    width: 100%;
-    max-width: 300px; /* Keeps input boxes centered but labels aligned */
-}
-
-.input-group {
-    display: flex;
-    flex-direction: column; /* Stacks label on top of input */
-    width: 100%;
-}
-
-.button-wrapper {
+/* Login Form styling: centered column, max-width 400px */
+.login-form {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;                /* Increased gap for consistent spacing */
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Input group: stack label on top of input */
+.login-input-group {
+  display: flex;
+  flex-direction: column;
   width: 100%;
 }
 
-label {
-    width: 100%;
-  text-align: left; /* Forces label to stay aligned left */
+/* Label styling for inputs */
+.login-label {
   font-size: 14px;
-  color: black;
-  font-weight: 500;
-  font-family: "Kanit", sans-serif;
-  margin-bottom: 5px; /* Adds spacing between label and input */
+  color: #333;
+  font-weight: 600;
+  text-align: left;
+  margin-bottom: 5px;
 }
 
-input {
-  width: 100%; /* Adjust width as needed */
-  max-width: 460px; /* Limit maximum width */
-  height: 20px; /* Adjust height */
+/* Input field styling */
+.login-input {
+  width: 100%;
+  max-width: 400px;         /* Limit input width to form max-width */
+  height: 35px;
   padding: 10px 20px;
   border: none;
   border-radius: 27px;
   background-color: #eee;
   outline: none;
-  font-family: "Kanit", sans-serif !important; /* Ensure font applies */
+  font-family: "Kanit", sans-serif;
   font-size: 16px;
   color: #333;
 }
 
-.login-button {
-    width: 100%;
-    max-width: 168px; /* Limit button size */
-    height: 34px;
-    padding: 15px; /* Remove excessive padding */
-    margin-top: 30px;
-    background-color: #007642;
-    color: white;
-    font-size: 16px;
-    border: 5px solid #A78952; /* Gold stroke */
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: 600;
-    font-family: "Kanit", sans-serif !important;
-    text-align: center;
-    display: flex;
-    align-items: center; /* Vertically center text */
-    justify-content: center; /* Horizontally center text */
-    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.23)
+/* Login button wrapper: center the button and add spacing above */
+.login-button-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 30px;
 }
 
+/* Login button styling */
+.login-button {
+  width: 100%;
+  max-width: 400px;         /* Make button as wide as input/form */
+  height: 34px;
+  padding: 15px;
+  background-color: #007642;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: 5px solid #A78952;  /* Preserve gold stroke */
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: "Kanit", sans-serif;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.23);
+}
+
+/* Hover effect for login button */
 .login-button:hover {
   background-color: #004d00;
 }
+
+/* Error message styling */
+.login-error {
+  color: red;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 500px;
+}
+
+  

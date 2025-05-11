@@ -1,9 +1,9 @@
+// src/routes/userRoutes.js
 const express = require("express");
 const router = express.Router();
+const { verifyToken } = require("../authentication/auth");
+const userController = require("../controllers/userController");
 
-// Sample user route
-router.get("/", (req, res) => {
-  res.json({ message: "User API is working!" });
-});
+router.get("/profile", verifyToken, userController.getUserProfile);
 
 module.exports = router;
