@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./BookingHistory.css";
 import logo from "./logo.svg";
-import absentIcon from "./absent.svg";
 import onbusIcon from "./onbus.svg";
+import WaitingForCheckinIcon from "./WaitingForCheckin.svg";
 import { useCookies } from 'react-cookie';
 
 const BookingHistory = () => {
@@ -12,6 +12,20 @@ const BookingHistory = () => {
   const navigate = useNavigate();
   const [cookies] = useCookies(['token', 'user_id']);
   const token = cookies.token;
+
+  const cancelReservation = async (reservationId) => {
+    if (!token) return;
+  
+    try {
+      await axios.delete(`http://localhost:5001/api/reservations/${reservationId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      setReservations(prev => prev.filter(r => r.reservation_id !== reservationId));
+    } catch (err) {
+      console.error("Failed to cancel reservation:", err);
+    }
+  };
 
   useEffect(() => {
     const userId = cookies.user_id;
@@ -28,15 +42,13 @@ const BookingHistory = () => {
     });
   }, [token]);
 
-  const getStatusIcon = (status) => status === "Confirmed" ? onbusIcon : absentIcon;
-  const getStatusColor = (status) => status === "Confirmed" ? "green" : "red";
-  const getStatusText = (status) => status === "Confirmed" ? "ขึ้นรถ" : "ขาด";
-
   return (
     <div className="history-container">
       <header className="history-header">
         <img src={logo} alt="EVT Logo" className="history-logo" />
-        <button className="book-button" onClick={() => navigate("/seatbooking")}>จองที่นั่ง</button>
+        <button className="book-button" onClick={() => navigate("/seatbooking")}>
+          จองที่นั่ง
+        </button>
       </header>
 
       <div className="history-title">ประวัติการจอง (Booking History)</div>
@@ -50,7 +62,9 @@ const BookingHistory = () => {
               <div className="left-info">
                 <div className="booking-date">
                   {new Date(r.booking_time).toLocaleDateString("th-TH", {
-                    day: "2-digit", month: "2-digit", year: "numeric"
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric"
                   })}
                 </div>
                 <div className="booking-detail">
@@ -60,16 +74,25 @@ const BookingHistory = () => {
                 </div>
               </div>
 
-              <div className="right-status">
-                {r.status === "Cancelled" ? (
-                  <button className="cancelled-button">ยกเลิกการจอง</button>
-                ) : (
-                  <>
-                    <img src={getStatusIcon(r.status)} alt={r.status} className="status-icon-img" />
-                    <span className={`status-text ${getStatusColor(r.status)}`}>{getStatusText(r.status)}</span>
-                  </>
-                )}
-              </div>
+            <div className="right-status">
+              {r.check_in_status ? (
+                <div className="status-group">
+                  <img src={onbusIcon} alt="ขึ้นรถแล้ว" className="status-icon-img" />
+                  <span className="status-text green">เช็คอินเรียบร้อย</span>
+                </div>
+              ) : (
+                <div className="status-group">
+                  <img src={WaitingForCheckinIcon} alt="รอการเช็คอิน" className="status-icon-img" />
+                  <span className="status-text gray">รอการเช็คอิน</span>
+                  {r.status !== "Cancelled" && (
+                    <>
+                      <button className="cancelled-button" onClick={() => cancelReservation(r.reservation_id)}>ยกเลิกการจอง</button>
+                      {r.status === "Waitlist" && <div className="waitlist-note">**อยู่ในคิว**</div>}
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
             </div>
           ))
         )}
@@ -79,6 +102,7 @@ const BookingHistory = () => {
 };
 
 export default BookingHistory;
+
 
 
 

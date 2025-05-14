@@ -82,19 +82,24 @@ body {
   color: #444;
 }
 
-.booking-status {
+.right-status {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .status-icon-img {
-  width: 24px;
-  margin-right: 8px;
+  width: 48px; /* adjust size as needed */
+  height: 48px;
+  margin-bottom: 4px;
 }
 
 .status-text.green {
-  color: #007642;
-  font-weight: 600;
+  color: #156a42;
+  font-weight: bold;
+  font-size: 16px;
 }
 
 .status-text.red {
@@ -102,15 +107,42 @@ body {
   font-weight: 600;
 }
 
-.cancel-button {
-  background-color: #d9534f;
+.cancelled-button {
+  background: #DD5456;
   color: white;
+  font-size: 14px;
+  font-weight: 600;
   border: none;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  cursor: not-allowed;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-family: "Kanit", sans-serif;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  cursor: default;
 }
+
+.cancelled-button:hover {
+  background: #B44446;
+}
+
+.status-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.status-text.gray {
+  color: #555;
+  font-weight: 500;
+  font-size: 16px;
+  margin-top: 4px;
+}
+
+.waitlist-note {
+  color: #F6855C;
+  font-size: 15px;
+  margin-top: 4px;
+}
+
 
 
 
