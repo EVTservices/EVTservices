@@ -35,7 +35,7 @@ const Login = () => {
       console.log(response.data);
 
       // Redirect to Menu page
-      navigate("/menu");
+      navigate("/line-check");
     } catch (err) {
       setError("เบอร์โทรศัพท์หรือรหัสผ่านผิดพลาด กรุณากรอกข้อมูลอีกครั้ง");
       console.error("Login failed:", err);

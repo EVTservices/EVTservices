@@ -5,6 +5,7 @@ import Menu from "./Menu";
 import Seatbooking from "./Seatbooking";
 import BookingSuccess from "./BookingSuccess";
 import BookingHistory from "./BookingHistory";
+import LineRedirectChecker from "./LineRedirectChecker";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
         <Route path="/Seatbooking" element={<Seatbooking />} /> {/* Menu Page */}
         <Route path="/success" element={<BookingSuccess />} />
         <Route path="/BookingHistory" element={<BookingHistory />} />
-
+        <Route path="/line-check" element={<LineRedirectChecker />} />
       </Routes>
     </Router>
   );
