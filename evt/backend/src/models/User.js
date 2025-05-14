@@ -29,9 +29,9 @@ const User = sequelize.define("User", {
 }, { timestamps: false, freezeTableName: true });
 
 // Hash password before saving user
-User.beforeCreate(async (user) => {
-    user.password = await bcrypt.hash(user.password, 10);
-});
+// User.beforeCreate(async (user) => {
+//     user.password = await bcrypt.hash(user.password, 10);
+// });
 
 module.exports = User;
 
