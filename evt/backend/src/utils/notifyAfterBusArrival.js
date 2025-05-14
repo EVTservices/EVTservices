@@ -132,7 +132,7 @@ async function notifyAfterBusArrival() {
               console.error(`❌ Failed to send LINE to user ${user.user_id}:`, err.message);
             }
           }
-        }, 1 * 30 * 1000); // 5 minutes delay
+        }, 5 * 60 * 1000); // 5 minutes delay
       }
     }
   }
