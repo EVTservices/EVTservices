@@ -1,5 +1,6 @@
 const { Reservation, Route, Stop, Factory, Bus, User } = require("../models");
 const { Op } = require("sequelize");
+const { sendLineMessage } = require("../utils/lineNotifier");
 
 // 1. Get available routes by the user's factory and optional shift
 exports.getMyRoutesByShift = async (req, res) => {
@@ -81,11 +82,29 @@ exports.createReservation = async (req, res) => {
       status,
     });
 
+    const stop = await Stop.findByPk(stop_id);
+    if (!stop) return res.status(404).json({ error: "Stop not found." });
+
     const message =
       status === "Confirmed"
         ? "Reservation confirmed."
         : "Bus is full. You're on the waitlist. Please come to the stop early to get a seat if available.";
 
+    // ✅ Send LINE Notification if line_user_id exists
+    if (user.line_user_id) {
+      const lineMsg =
+        status === "Confirmed"
+          ? `✅ ยืนยันการจอง \n \nชื่อ: ${user.name} \nรหัสการจอง: ${newReservation.reservation_id} \nเลขรถ: ${bus.bus_number} \nโรงงาน: ${user.factory_name} \nเวลา(กะ): ${route.shift_name} \nสายรถ: ${route.route_name} \nป้าย: ${stop.name} 
+          \n🔔กรุณายืนยันการขึ้นรถอีกรอบผ่านคิวอาร์โค้ดที่ติดด้านหลังที่นั่งตอนขึ้นรถ \n \nขอบคุณครับ`
+          : `✅ ยืนยันการจอง \n \nชื่อ: ${user.name} \nรหัสการจอง: ${newReservation.reservation_id} \nเลขรถ: ${bus.bus_number} \nโรงงาน: ${user.factory_name} \nเวลา(กะ): ${route.shift_name} \nสายรถ: ${route.route_name} \nป้าย: ${stop.name} 
+          \n🔔กรุณามาที่ป้ายก่อนเวลาเนื่องจากคุณอยู่ในสถานะรอการจอง \n \nขอบคุณครับ`;
+      await sendLineMessage(user.line_user_id, lineMsg);
+    }
+
+    const note = !user.line_user_id
+      ? "You haven't linked your LINE account. Please link it to receive updates."
+      : null;
+    
     res.status(201).json({ message, reservation: newReservation });
   } catch (err) {
     console.error("Error creating reservation:", err);
@@ -133,8 +152,25 @@ exports.cancelReservation = async (req, res) => {
       return res.status(403).json({ message: "You can only cancel your own reservation." });
     }
 
+    const user = await User.findByPk(authenticatedUserId);
+    const route = await Route.findByPk(reservation.route_id);
+    const bus = await Bus.findByPk(reservation.bus_id);
+    const stop = await Stop.findByPk(reservation.stop_id);
+
     await reservation.destroy();
-    res.json({ message: "Reservation canceled successfully." });
+
+    // ✅ Send LINE Notification if user has linked LINE
+    if (user?.line_user_id && route) { 
+      const cancelMsg = `❌ ยกเลิกการจอง \n \nชื่อ: ${user.name} \nรหัสการจอง: ${Reservation.reservation_id} \nเลขรถ: ${bus.bus_number} \nโรงงาน: ${user.factory_name} \nเวลา(กะ): ${route.shift_name} \nสายรถ: ${route.route_name} \nป้าย: ${stop.name} 
+           \nขอบคุณครับ`;
+      await sendLineMessage(user.line_user_id, cancelMsg);
+    }
+
+    const note = !user.line_user_id
+      ? "You haven't linked your LINE account. Please link it to receive updates."
+      : null;
+
+    res.json({ message: "Reservation canceled successfully.", note });
   } catch (error) {
     console.error("Error canceling reservation:", error);
     res.status(500).json({ message: "Server error while canceling reservation." });

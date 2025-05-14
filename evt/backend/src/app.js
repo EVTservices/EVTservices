@@ -11,6 +11,13 @@ require('./models/associations');
 const pollBusLocations = require("./polling/pollingBusLocation");
 const cron = require("node-cron");
 
+app.use(express.json({
+  verify: (req, res, buf) => {
+    req.rawBody = buf.toString("utf8");
+  }
+}));
+
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -20,11 +27,23 @@ const authRoutes = require("./routes/authRoutes");
 const reservationRoutes = require("./routes/reservationRoutes");
 const busTrackingRoutes = require("./routes/trackingRoutes");
 const checkInRoutes = require("./routes/checkRoutes");
-//const lineRoutes = require("./routes/lineRoutes");
+const lineRoutes = require("./routes/lineRoutes");
 const userRoutes = require("./routes/userRoutes");
+const lineWebhookRoutes = require("./routes/lineWebhook");
+const {notifyAfterBusArrival} = require("./utils/notifyAfterBusArrival");
+
 
 // For getting line id
-//app.use("/api/line", lineRoutes);
+app.use("/api/line", lineRoutes);
+app.post("/webhook", lineWebhookRoutes);
+
+
+// 🔁 Poll bus locations every 1 minute
+setInterval(() => {
+  notifyAfterBusArrival().catch(err => {
+    console.error("❌ Error in notifyAfterBusArrival:", err.message);
+  });
+}, 60 * 1000);
 
 
 // Use routes
@@ -52,9 +71,9 @@ app.get("/api/test-db", async (req, res) => {
 });
 
 // Start polling every minute
-cron.schedule("* * * * *", () => {
-    console.log("⏱️ Running GPS polling...");
-    pollBusLocations();
-  });
+// cron.schedule("* * * * *", () => {
+//     console.log("⏱️ Running GPS polling...");
+//     pollBusLocations();
+//   });
 
 module.exports = app;

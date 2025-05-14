@@ -4,7 +4,7 @@ const Route = require("./Route");
 
 const Bus = sequelize.define("Bus", {
     bus_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    bus_number: { type: DataTypes.STRING, allowNull: false, unique: true },
+    bus_number: { type: DataTypes.STRING, allowNull: false},
     capacity: { type: DataTypes.INTEGER, allowNull: false },
     route_id: { 
         type: DataTypes.INTEGER, 
@@ -12,8 +12,8 @@ const Bus = sequelize.define("Bus", {
         references: { model: Route, key: "route_id" }, // Fix reference
         onDelete: "CASCADE"
     },
+    shift_name: { type: DataTypes.STRING, allowNull: false },
     status: { type: DataTypes.STRING, allowNull: false },
-
     device_id: { type: DataTypes.STRING, allowNull: true }, // Link to GPS device
     current_latitude: { type: DataTypes.FLOAT, allowNull: true },
     current_longitude: { type: DataTypes.FLOAT, allowNull: true },
