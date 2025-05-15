@@ -8,7 +8,7 @@ import { useCookies } from "react-cookie";
 
 const Menu = () => {
   const navigate = useNavigate();
-  const [cookies] = useCookies(["token"]);
+  const [cookies, removeCookie] = useCookies(["token"]);
   const [name, setName] = useState("-");
   const [factoryName, setFactoryName] = useState("-");
 
@@ -29,6 +29,21 @@ const Menu = () => {
       });
   }, [cookies]);
 
+  const handleLogout = async () => {
+    if (!window.confirm("คุณต้องการออกจากระบบใช่หรือไม่?")) return;
+    try {
+      await axios.post("http://localhost:5001/api/auth/logout", {}, {
+        headers: { Authorization: `Bearer ${cookies.token}` },
+      });
+
+      removeCookie("token", { path: "/" });
+      removeCookie("user_id", { path: "/" });
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <div className="menu-container">
       <img src={logo} alt="EVT Logo" className="menu-logo" />
@@ -45,6 +60,9 @@ const Menu = () => {
         </button>
         <button className="menu-button" onClick={() => navigate("/bookinghistory")}>
           ประวัติการจอง
+        </button>
+        <button className="menu-button" onClick={handleLogout}>
+          ออกจากระบบ
         </button>
       </div>
     </div>

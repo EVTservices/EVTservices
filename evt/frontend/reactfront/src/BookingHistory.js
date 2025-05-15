@@ -10,7 +10,7 @@ import { useCookies } from 'react-cookie';
 const BookingHistory = () => {
   const [reservations, setReservations] = useState([]);
   const navigate = useNavigate();
-  const [cookies] = useCookies(['token', 'user_id']);
+  const [cookies, removeCookie] = useCookies(['token', 'user_id']);
   const token = cookies.token;
 
   const cancelReservation = async (reservationId) => {
@@ -24,6 +24,21 @@ const BookingHistory = () => {
       setReservations(prev => prev.filter(r => r.reservation_id !== reservationId));
     } catch (err) {
       console.error("Failed to cancel reservation:", err);
+    }
+  };
+
+  const handleLogout = async () => {
+    if (!window.confirm("คุณต้องการออกจากระบบใช่หรือไม่?")) return;
+    try {
+      await axios.post("http://localhost:5001/api/auth/logout", {}, {
+        headers: { Authorization: `Bearer ${cookies.token}` },
+      });
+
+      removeCookie("token", { path: "/" });
+      removeCookie("user_id", { path: "/" });
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
   };
 
@@ -44,11 +59,16 @@ const BookingHistory = () => {
 
   return (
     <div className="history-container">
-      <header className="history-header">
-        <img src={logo} alt="EVT Logo" className="history-logo" />
-        <button className="book-button" onClick={() => navigate("/seatbooking")}>
-          จองที่นั่ง
-        </button>
+      <header className="seatbooking-header">
+          <img src={logo} alt="EVT Logo" className="seatbooking-logo" />
+          <div className="header-buttons">
+            <button className="backtomenu-button" onClick={() => navigate("/menu")}>
+              เมนูหลัก
+            </button>
+            <button className="backtomenu-button" onClick={handleLogout}>
+              ออกจากระบบ
+            </button>
+          </div>
       </header>
 
       <div className="history-title">ประวัติการจอง (Booking History)</div>

@@ -15,8 +15,9 @@ const Seatbooking = () => {
   const [routes, setRoutes] = useState([]);
   const [stops, setStops] = useState([]);
 
-  const [cookies, setCookie] = useCookies(['token','user_id'])
+  const [cookies, setCookie, removeCookie] = useCookies(['token','user_id'])
   const token = cookies.token;
+  
 
   useEffect(() => {
     if (step === 2 && shift) {
@@ -62,13 +63,33 @@ const Seatbooking = () => {
     }
   };
 
+  const handleLogout = async () => {
+    if (!window.confirm("คุณต้องการออกจากระบบใช่หรือไม่?")) return;
+    try {
+      await axios.post("http://localhost:5001/api/auth/logout", {}, {
+        headers: { Authorization: `Bearer ${cookies.token}` },
+      });
+
+      removeCookie("token", { path: "/" });
+      removeCookie("user_id", { path: "/" });
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <div className="seatbooking-container">
       <header className="seatbooking-header">
         <img src={logo} alt="EVT Logo" className="seatbooking-logo" />
-        <button className="backtomenu-button" onClick={() => navigate("/menu")}>
-          เมนูหลัก
-        </button>
+        <div className="header-buttons">
+          <button className="backtomenu-button" onClick={() => navigate("/menu")}>
+            เมนูหลัก
+          </button>
+          <button className="backtomenu-button" onClick={handleLogout}>
+            ออกจากระบบ
+          </button>
+        </div>
       </header>
 
       <div className="step-indicator">

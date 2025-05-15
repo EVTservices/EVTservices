@@ -178,6 +178,13 @@ body {
   animation: fadeIn 0.3s ease-in-out;
 }
 
+.header-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-left: auto;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
