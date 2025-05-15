@@ -110,6 +110,16 @@ router.post("/login", async (req, res) => {
     }
 });
 
+//Log out
+router.post("/logout", verifyToken, async (req, res) => {
+    try {
+        res.json({ message: "Logout successful. Please remove token on client side." });
+    } catch (err) {
+        console.error("❌ Error during logout:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
 // Example protected route
 router.get("/protected", verifyToken, (req, res) => {
     res.json({ message: "Protected route accessed!", user: req.user });
