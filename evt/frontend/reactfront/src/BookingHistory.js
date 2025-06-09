@@ -46,6 +46,7 @@ const BookingHistory = () => {
     const userId = cookies.user_id;
     if (!userId || !token) return;
 
+    console.log("user_id cookie:", cookies.user_id);
     axios.get(`http://localhost:5001/api/reservations/user/${userId}`, {
       headers: { Authorization: `Bearer ${token}` },
     })

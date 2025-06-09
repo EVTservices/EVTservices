@@ -1,5 +1,4 @@
-// notifyAfterBusArrival.js
-const { Bus, Route, Stop, User, Notification } = require("../models");
+const { Bus, Route, Stop, User, Notification, CheckIn } = require("../models");
 const Reservation = require("../models/Reservation");
 const axios = require("axios");
 const { Op } = require("sequelize");
@@ -7,7 +6,6 @@ const { sendLineMessage } = require("../utils/lineNotifier");
 require("dotenv").config();
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
-
 
 async function notifyAfterBusArrival() {
   console.log("🚀 Starting notifyAfterBusArrival...");
@@ -30,7 +28,6 @@ async function notifyAfterBusArrival() {
     }
 
     for (const stop of stops) {
-      console.log(`📍 Checking stop: ${stop.name} (${stop.latitude}, ${stop.longitude})`);
       const origin = `${bus.current_latitude},${bus.current_longitude}`;
       const destination = `${stop.latitude},${stop.longitude}`;
 
@@ -57,8 +54,32 @@ async function notifyAfterBusArrival() {
       const minutes = Math.floor(eta.duration.value / 60);
       console.log(`⏱️ ETA to stop "${stop.name}": ${minutes} minute(s)`);
 
+      if (minutes === 5) {
+        const reservations = await Reservation.findAll({
+          where: {
+            bus_id: bus.bus_id,
+            route_id: bus.route.route_id,
+            stop_id: stop.stop_id,
+            status: "Confirmed",
+          },
+          include: [{ model: User, as: "User" }],
+        });
+
+        for (const res of reservations) {
+          const user = res.User;
+          if (!user?.line_user_id) continue;
+
+          const msg = `⏰ รถจะถึงป้าย: ${stop.name} ภายใน 5 นาที เตรียมตัวให้พร้อมนะครับ`;
+          try {
+            await sendLineMessage(user.line_user_id, msg);
+            console.log(`✅ Pre-arrival reminder sent to user ${user.user_id}`);
+          } catch (err) {
+            console.error(`❌ Failed to send pre-arrival LINE to user ${user.user_id}:`, err.message);
+          }
+        }
+      }
+
       if (minutes <= 1) {
-        console.log(`✅ Bus has ARRIVED at stop: ${stop.name}`);
         const arrivalTag = `${bus.bus_id}_${stop.stop_id}`;
 
         const alreadySent = await Notification.findOne({
@@ -72,45 +93,47 @@ async function notifyAfterBusArrival() {
         });
 
         if (alreadySent) {
-          console.log(`⚠️ Notification already sent for stop ${stop.name} in the last 10 minutes.`);
+          console.log(`⚠️ Already sent reminder for stop ${stop.name}. Skipping.`);
           continue;
         }
 
-        console.log(`⏳ Waiting 5 minutes to notify users for stop: ${stop.name}`);
+        console.log(`⏳ Waiting 1 minute to notify users at stop: ${stop.name}`);
         setTimeout(async () => {
-          console.log(`🔔 Notifying users for stop: ${stop.name}`);
-          console.log(`🔍 Matching bus_id: ${bus.bus_id}`);
-          console.log(`🔍 Matching route_id: ${bus.route.route_id}`);
-          console.log(`🔍 Matching stop_id: ${stop.stop_id}`);
-
-        const reservations = await Reservation.findAll({
-        where: {
-            bus_id: bus.bus_id,
-            route_id: bus.route.route_id,
-            stop_id: stop.stop_id,
-            status: "Confirmed",
-        },
-        include: [{
-            model: User,
-            as: "User" // ✅ use the alias from your association
-        }],
-        });
-          
+          const reservations = await Reservation.findAll({
+            where: {
+              bus_id: bus.bus_id,
+              route_id: bus.route.route_id,
+              stop_id: stop.stop_id,
+              status: "Confirmed",
+            },
+            include: [{ model: User, as: "User" }],
+          });
 
           if (reservations.length === 0) {
             console.log("ℹ️ No confirmed reservations for this stop.");
+            return;
           }
 
           for (const res of reservations) {
             const user = res.User;
-            if (!user?.line_user_id) {
-              console.log(`❌ User ${user.user_id} has no LINE ID.`);
+            if (!user?.line_user_id) continue;
+
+            const alreadyCheckedIn = await CheckIn.findOne({
+              where: {
+                user_id: user.user_id,
+                bus_id: bus.bus_id,
+                route_id: res.route_id,
+                stop_id: res.stop_id,
+                check_out_time: null,
+              },
+            });
+
+            if (alreadyCheckedIn) {
+              console.log(`✅ User ${user.user_id} already checked in. Skip.`);
               continue;
             }
 
-            const msg = `📍คุณยังไม่ได้เช็คอินที่ป้าย: ${stop.name} \n \nรถได้มาถึงป้ายแล้วกรุณาสแกน QR เช็คอินหากคุณได้ขึ้นรถ`;
-            console.log(`📨 Sending LINE message to user ${user.user_id} (${user.line_user_id})`);
-
+            const msg = `📍คุณยังไม่ได้เช็คอินที่ป้าย: ${stop.name} \n\n🚍 รถถึงป้ายแล้ว กรุณาสแกน QR เช็คอิน\n[ARRIVED:${arrivalTag}]`;
             try {
               await sendLineMessage(user.line_user_id, msg);
               await Notification.create({
@@ -120,7 +143,7 @@ async function notifyAfterBusArrival() {
                 status: "Sent",
                 method: "LINE OA",
               });
-              console.log(`✅ Notification sent and logged for user ${user.user_id}`);
+              console.log(`✅ Reminder sent to user ${user.user_id}`);
             } catch (err) {
               await Notification.create({
                 user_id: user.user_id,
@@ -132,7 +155,7 @@ async function notifyAfterBusArrival() {
               console.error(`❌ Failed to send LINE to user ${user.user_id}:`, err.message);
             }
           }
-        }, 5 * 60 * 1000); // 5 minutes delay
+        }, 60 * 1000); // 1-minute delay
       }
     }
   }

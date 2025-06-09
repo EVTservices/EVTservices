@@ -45,7 +45,7 @@ const Login = () => {
       const response = await axios.get("http://localhost:5001/api/user/profile", {
         headers: { Authorization: `Bearer ${cookies.token}` },
       });
-      setCookie('user_id', response.data.user_id)
+      setCookie("user_id", response.data.user_id, { path: "/" });
       setCookie("name", response.data.user.name);
       setCookie("factory_name", response.data.user.factory_name);
 
