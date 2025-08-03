@@ -44,7 +44,11 @@ npm install
 - node seedBus.js
 - node seedSchedule.js
 
-4. **Start Backend Server**
+4. **Hook Backend with Line**
+- Go to https://developers.line.biz/console/ (The created line account username and password is same as Github)
+- Set LINE webhook URL to: https://your-domain.com/webhook (Right now there is no real domain so using ngrok to test instead)
+
+5. **Start Backend Server**
 - node index.js
 Visit: http://localhost:5001
 
